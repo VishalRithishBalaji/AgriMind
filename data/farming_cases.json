@@ -1,0 +1,52 @@
+[
+    {
+        "id": "CASE001",
+        "crop": "Rice",
+        "district": "Coimbatore",
+        "weather": "Hot and Dry",
+        "soil": "Medium Nitrogen",
+        "market": "Increasing",
+        "recommendation": "Irrigate every 3 days and apply nitrogen fertilizer.",
+        "outcome": "Yield increased by 18%"
+    },
+    {
+        "id": "CASE002",
+        "crop": "Rice",
+        "district": "Thanjavur",
+        "weather": "Humid",
+        "soil": "High Organic Carbon",
+        "market": "Stable",
+        "recommendation": "Reduce irrigation frequency and monitor pests.",
+        "outcome": "Healthy crop with reduced water usage."
+    },
+    {
+        "id": "CASE003",
+        "crop": "Cotton",
+        "district": "Coimbatore",
+        "weather": "Windy",
+        "soil": "Low Nitrogen",
+        "market": "Increasing",
+        "recommendation": "Apply nitrogen fertilizer and postpone pesticide spraying.",
+        "outcome": "Improved plant growth after one week."
+    },
+    {
+        "id": "CASE004",
+        "crop": "Maize",
+        "district": "Salem",
+        "weather": "Moderate",
+        "soil": "Optimal",
+        "market": "Stable",
+        "recommendation": "Continue normal irrigation schedule.",
+        "outcome": "Yield remained stable."
+    },
+    {
+        "id": "CASE005",
+        "crop": "Rice",
+        "district": "Madurai",
+        "weather": "High Temperature",
+        "soil": "Low Organic Carbon",
+        "market": "Decreasing",
+        "recommendation": "Increase irrigation and add compost.",
+        "outcome": "Crop stress reduced after 10 days."
+    }
+]
