@@ -3,11 +3,28 @@ from app.collectors.data_collector import data_collector
 
 class ContextAgent:
 
-    def build_context(
+    """
+    Context Understanding Agent
+
+    Responsibilities
+    ----------------
+    1. Collect data from all collectors
+    2. Build unified farm context
+    3. Identify risks and opportunities
+    4. Compute confidence score
+    """
+
+    ####################################################################
+    # Main API
+    ####################################################################
+
+    def analyze(
 
         self,
 
         crop="rice",
+
+        location=None,
 
         latitude=None,
 
@@ -26,17 +43,12 @@ class ContextAgent:
         )
 
         weather = data["weather"]
-
         soil = data["soil"]
-
         satellite = data["satellite"]
-
         market = data["market"]
-
         historical = data["historical"]
 
         risks = []
-
         opportunities = []
 
         ##################################################################
@@ -114,6 +126,8 @@ class ContextAgent:
         )
 
         ##################################################################
+        # Confidence
+        ##################################################################
 
         confidence = (
 
@@ -133,9 +147,7 @@ class ContextAgent:
 
             "crop": crop,
 
-            "location":
-
-                soil["location"]["district"],
+            "location": soil["location"]["district"],
 
             "weather_status":
 
@@ -172,6 +184,32 @@ class ContextAgent:
         }
 
         return context
+
+    ####################################################################
+    # Backward Compatibility
+    ####################################################################
+
+    def build_context(
+
+        self,
+
+        crop="rice",
+
+        latitude=None,
+
+        longitude=None
+
+    ):
+
+        return self.analyze(
+
+            crop=crop,
+
+            latitude=latitude,
+
+            longitude=longitude
+
+        )
 
 
 context_agent = ContextAgent()
