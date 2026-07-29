@@ -1,32 +1,15 @@
-class SatelliteAgent:
+from app.agents.base_agent import BaseAgent
+from app.prompts.satellite_prompt import SATELLITE_PROMPT
 
+
+class SatelliteAgent(BaseAgent):
     """
     Satellite Specialist Agent
     """
 
     name = "SatelliteAgent"
 
-    def execute(self, context):
-
-        return {
-
-            "agent": self.name,
-
-            "status": "completed",
-
-            "summary": {
-
-                "vegetation":
-
-                    context["vegetation_health"],
-
-                "risks":
-
-                    context["risks"]
-
-            }
-
-        }
+    prompt = SATELLITE_PROMPT
 
 
 satellite_agent = SatelliteAgent()

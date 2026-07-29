@@ -1,27 +1,26 @@
 """
 Agent Registry
 
-Every executable agent is registered here.
+Central registry for all executable AI agents.
 
-The planner NEVER imports agents directly.
-
-The executor loads agents from this registry.
-
-Adding a new agent requires only
-
-1. Create the agent
-
-2. Register it here
-
-The planner will automatically be able to use it.
+Responsibilities
+----------------
+1. Provide a single source of truth for available agents.
+2. Supply metadata to the Planner.
+3. Allow the Executor to dynamically instantiate agents.
+4. Support future capability-based agent selection.
 """
 
 from app.agents.weather_agent import weather_agent
 from app.agents.soil_agent import soil_agent
-from app.agents.market_agent import market_agent
 from app.agents.satellite_agent import satellite_agent
+from app.agents.market_agent import market_agent
 from app.agents.recommendation_agent import recommendation_agent
 
+
+########################################################################
+# Agent Instances
+########################################################################
 
 AGENT_REGISTRY = {
 
@@ -38,70 +37,147 @@ AGENT_REGISTRY = {
 }
 
 
+########################################################################
+# Agent Metadata
+########################################################################
+
 AGENT_METADATA = {
 
     "WeatherAgent": {
 
+        "type": "specialist",
+
+        "priority": 1,
+
         "description":
-            "Weather forecasting and environmental analysis.",
+            "Analyzes weather conditions including temperature, humidity, rainfall, and wind.",
 
         "input":
-            "Farm Context",
+            "FarmContext",
 
         "output":
-            "Weather assessment"
+            "SpecialistOutput",
+
+        "dependencies": [],
+
+        "capabilities": [
+            "weather",
+            "rainfall",
+            "humidity",
+            "temperature",
+            "wind"
+        ]
 
     },
 
     "SoilAgent": {
 
+        "type": "specialist",
+
+        "priority": 2,
+
         "description":
-            "Soil nutrient and fertility analysis.",
+            "Analyzes soil health, fertility, nutrients, moisture, and pH.",
 
         "input":
-            "Farm Context",
+            "FarmContext",
 
         "output":
-            "Soil assessment"
+            "SpecialistOutput",
+
+        "dependencies": [],
+
+        "capabilities": [
+            "soil",
+            "nutrients",
+            "fertility",
+            "moisture",
+            "ph"
+        ]
 
     },
 
     "SatelliteAgent": {
 
+        "type": "specialist",
+
+        "priority": 3,
+
         "description":
-            "Satellite vegetation and water stress analysis.",
+            "Analyzes satellite imagery including NDVI, EVI, NDWI, vegetation health, water stress, and exposed soil.",
 
         "input":
-            "Farm Context",
+            "FarmContext",
 
         "output":
-            "Vegetation assessment"
+            "SpecialistOutput",
+
+        "dependencies": [],
+
+        "capabilities": [
+            "ndvi",
+            "evi",
+            "ndwi",
+            "vegetation",
+            "water stress",
+            "satellite"
+        ]
 
     },
 
     "MarketAgent": {
 
+        "type": "specialist",
+
+        "priority": 4,
+
         "description":
-            "Crop market analysis.",
+            "Analyzes crop prices, demand, trends, and selling opportunities.",
 
         "input":
-            "Farm Context",
+            "FarmContext",
 
         "output":
-            "Market assessment"
+            "SpecialistOutput",
+
+        "dependencies": [],
+
+        "capabilities": [
+            "market",
+            "pricing",
+            "demand",
+            "selling"
+        ]
 
     },
 
     "RecommendationAgent": {
 
+        "type": "decision",
+
+        "priority": 5,
+
         "description":
-            "Generate final recommendation.",
+            "Synthesizes all SpecialistOutputs into a final agricultural recommendation.",
 
         "input":
-            "Outputs of previous agents",
+            "SpecialistOutputs",
 
         "output":
-            "Final recommendation"
+            "Recommendation",
+
+        "dependencies": [
+            "WeatherAgent",
+            "SoilAgent",
+            "SatelliteAgent",
+            "MarketAgent"
+        ],
+
+        "capabilities": [
+            "decision making",
+            "reasoning",
+            "recommendation"
+        ]
 
     }
 

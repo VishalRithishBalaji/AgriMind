@@ -1,3 +1,6 @@
+import time
+
+from app.collectors.data_collector import data_collector
 from app.agents.context_agent import context_agent
 from app.orchestrator.planner import planner
 from app.orchestrator.executor import executor
@@ -5,166 +8,89 @@ from app.orchestrator.executor import executor
 
 class DynamicOrchestrator:
     """
-    Dynamic Agent Orchestrator
+    Complete AgriMind Multi-Agent Orchestrator
 
     Pipeline
-
+    --------
     User Query
         ↓
-    Context Agent
+    Data Collection
         ↓
-    LLM Planner
+    Context Understanding
         ↓
-    Executor
+    Planning
         ↓
-    Final Result
+    Specialist Execution
+        ↓
+    Recommendation
     """
 
-    def __init__(self):
-
-        self.context_agent = context_agent
-
-        self.planner = planner
-
-        self.executor = executor
-
-    ####################################################################
-    # Build Context
-    ####################################################################
-
-    def build_context(
-
-        self,
-
-        crop,
-
-        location
-
-    ):
-
-        print()
-
-        print("=" * 70)
-
-        print("BUILDING FARM CONTEXT")
-
-        print("=" * 70)
-
-        context = self.context_agent.analyze(
-
-            crop=crop,
-
-            location=location
-
-        )
-
-        return context
-
-    ####################################################################
-    # Create Execution Plan
-    ####################################################################
-
-    def create_plan(
-
-        self,
-
-        query,
-
-        context
-
-    ):
-
-        print()
-
-        print("=" * 70)
-
-        print("PLANNING")
-
-        print("=" * 70)
-
-        plan = self.planner.plan(
-
-            user_query=query,
-
-            context=context
-
-        )
-
-        return plan
-
-    ####################################################################
-    # Execute Plan
-    ####################################################################
-
-    def execute_plan(
-
-        self,
-
-        plan,
-
-        context
-
-    ):
-
-        print()
-
-        print("=" * 70)
-
-        print("EXECUTING")
-
-        print("=" * 70)
-
-        return self.executor.execute(
-
-            plan,
-
-            context
-
-        )
-
-    ####################################################################
-    # Complete Workflow
-    ####################################################################
-
     def run(
-
         self,
-
-        crop,
-
-        location,
-
-        user_query
-
+        user_query,
+        crop="rice",
+        latitude=11.0168,
+        longitude=76.9558
     ):
 
-        context = self.build_context(
+        overall_start = time.time()
 
-            crop,
+        ############################################################
+        # Step 1 : Collect Data
+        ############################################################
 
-            location
+        print("\nCollecting Farm Data...\n")
 
+        collected_data = data_collector.collect(
+            crop=crop,
+            latitude=latitude,
+            longitude=longitude
         )
 
-        plan = self.create_plan(
+        ############################################################
+        # Step 2 : Build Context
+        ############################################################
 
+        print("\nBuilding Farm Context...\n")
+
+        context = context_agent.analyze(
+            collected_data
+        )
+
+        ############################################################
+        # Step 3 : Plan
+        ############################################################
+
+        print("\nPlanning...\n")
+
+        plan = planner.plan(
             user_query,
-
             context
-
         )
 
-        execution = self.execute_plan(
+        ############################################################
+        # Step 4 : Execute
+        ############################################################
 
+        print("\nExecuting Specialists...\n")
+
+        execution = executor.execute(
             plan,
-
             context
+        )
 
+        ############################################################
+
+        total_time = round(
+            time.time() - overall_start,
+            3
         )
 
         return {
 
             "query": user_query,
+
+            "raw_data": collected_data,
 
             "context": context,
 
@@ -172,7 +98,9 @@ class DynamicOrchestrator:
 
             "execution": execution,
 
-            "status": "success"
+            "status": "success",
+
+            "total_time": total_time
 
         }
 

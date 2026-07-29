@@ -1,4 +1,8 @@
-class WeatherAgent:
+from app.agents.base_agent import BaseAgent
+from app.prompts.weather_prompt import WEATHER_PROMPT
+
+
+class WeatherAgent(BaseAgent):
 
     """
     Weather Specialist Agent
@@ -6,23 +10,7 @@ class WeatherAgent:
 
     name = "WeatherAgent"
 
-    def execute(self, context):
-
-        return {
-
-            "agent": self.name,
-
-            "status": "completed",
-
-            "summary": {
-
-                "weather":
-
-                    context["weather_status"]
-
-            }
-
-        }
+    prompt = WEATHER_PROMPT
 
 
 weather_agent = WeatherAgent()

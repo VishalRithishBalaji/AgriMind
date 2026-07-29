@@ -1,4 +1,8 @@
-class SoilAgent:
+from app.agents.base_agent import BaseAgent
+from app.prompts.soil_prompt import SOIL_PROMPT
+
+
+class SoilAgent(BaseAgent):
 
     """
     Soil Specialist Agent
@@ -6,23 +10,7 @@ class SoilAgent:
 
     name = "SoilAgent"
 
-    def execute(self, context):
-
-        return {
-
-            "agent": self.name,
-
-            "status": "completed",
-
-            "summary": {
-
-                "soil_health":
-
-                    context["soil_health"]
-
-            }
-
-        }
+    prompt = SOIL_PROMPT
 
 
 soil_agent = SoilAgent()
