@@ -1,19 +1,25 @@
 import json
 
-from app.utils.llm_client import llm_client
+from app.utils.gemini_client import gemini_client
 
-from app.prompts.recommendation_prompt import RECOMMENDATION_PROMPT
+from app.prompts.recommendation_prompt import (
+
+    RECOMMENDATION_PROMPT
+
+)
 
 
 class RecommendationAgent:
 
     name = "RecommendationAgent"
 
+    ############################################################
+
     def execute(
 
         self,
 
-        specialist_outputs
+        reasoning
 
     ):
 
@@ -21,19 +27,41 @@ class RecommendationAgent:
 
 {RECOMMENDATION_PROMPT}
 
-====================================================
+=====================================================
 
-SPECIALIST OUTPUTS
+COLLABORATIVE REASONING
 
-{json.dumps(specialist_outputs, indent=4)}
+Summary
 
-====================================================
+{reasoning.summary}
+
+Consensus
+
+{reasoning.consensus}
+
+Merged Risks
+
+{json.dumps(reasoning.merged_risks, indent=4)}
+
+Merged Opportunities
+
+{json.dumps(reasoning.merged_opportunities, indent=4)}
+
+Conflicts
+
+{json.dumps(reasoning.conflicts, indent=4)}
+
+Confidence
+
+{reasoning.confidence}
+
+=====================================================
 
 Return ONLY JSON.
 
 """
 
-        raw = llm_client.generate(
+        raw = gemini_client.generate(
 
             prompt
 

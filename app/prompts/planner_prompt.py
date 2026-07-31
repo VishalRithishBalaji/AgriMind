@@ -69,13 +69,61 @@ Use EXACTLY this JSON schema.
     "confidence":0.95
 }
 
-Rules
+EXECUTION RULES
 
-Never use the key "agents".
+1. RecommendationAgent MUST ALWAYS be the LAST agent.
 
-Never return markdown.
+2. RecommendationAgent MUST NEVER execute alone.
 
-Never wrap JSON inside ```.
+3. Include every specialist required to answer the question.
 
-Return JSON only.
+4. For irrigation, crop health, disease, fertilizer or farming decisions, ALWAYS include:
+
+- WeatherAgent
+- SoilAgent
+- SatelliteAgent
+- MarketAgent
+- HistoricalAgent
+- RecommendationAgent
+
+5. Return ONLY valid JSON.
+
+Example:
+
+{
+    "goal": "...",
+    "execution_plan": [
+        {
+            "agent": "WeatherAgent",
+            "priority": 1,
+            "purpose": "Analyze weather conditions."
+        },
+        {
+            "agent": "SoilAgent",
+            "priority": 2,
+            "purpose": "Analyze soil conditions."
+        },
+        {
+            "agent": "SatelliteAgent",
+            "priority": 3,
+            "purpose": "Analyze vegetation and water stress."
+        },
+        {
+            "agent": "MarketAgent",
+            "priority": 4,
+            "purpose": "Analyze market trends."
+        },
+        {
+            "agent": "HistoricalAgent",
+            "priority": 5,
+            "purpose": "Analyze historical farm records."
+        },
+        {
+            "agent": "RecommendationAgent",
+            "priority": 6,
+            "purpose": "Generate the final recommendation."
+        }
+    ],
+    "confidence": 0.95
+}
 """

@@ -214,126 +214,140 @@ Return ONLY JSON.
     def validate_plan(self, plan):
 
         # Accept old schema
-
         if "execution_plan" not in plan:
-
             if "agents" in plan:
-
                 plan["execution_plan"] = plan.pop("agents")
 
         required = [
-
             "goal",
-
             "execution_plan",
-
             "confidence"
-
         ]
 
         for field in required:
-
             if field not in plan:
-
                 raise ValueError(
-
                     f"Planner output missing '{field}'."
-
                 )
 
         if not isinstance(plan["execution_plan"], list):
-
             raise ValueError(
-
                 "execution_plan must be a list."
-
             )
+
+        #############################################################
+        # Validate steps
+        #############################################################
 
         for step in plan["execution_plan"]:
 
-            for key in [
+            if "agent" not in step:
+                raise ValueError(
+                    "Planner step missing 'agent'."
+                )
 
-                "agent",
-
+            step.setdefault(
                 "priority",
+                len(plan["execution_plan"])
+            )
 
-                "purpose"
-
-            ]:
-
-                if key not in step:
-
-                    raise ValueError(
-
-                        f"Planner step missing '{key}'."
-
-                    )
+            step.setdefault(
+                "purpose",
+                f"Execute {step['agent']}."
+            )
 
         #############################################################
         # Normalize confidence
         #############################################################
 
-        if isinstance(
-
-            plan["confidence"],
-
-            (int, float)
-
-        ):
-
+        if isinstance(plan["confidence"], (int, float)):
             if plan["confidence"] > 1:
-
                 plan["confidence"] /= 100
 
-                plan["confidence"] = round(
-
-                    plan["confidence"],
-
-                    2
-
-                )
+            plan["confidence"] = round(
+                plan["confidence"],
+                2
+            )
 
         #############################################################
-        # Always append RecommendationAgent
+        # Required specialist agents
         #############################################################
 
-        names = [
+        required_agents = [
 
-            step["agent"]
+            "WeatherAgent",
 
-            for step in plan["execution_plan"]
+            "SoilAgent",
+
+            "SatelliteAgent",
+
+            "MarketAgent",
+
+            "HistoricalAgent"
 
         ]
 
-        if "RecommendationAgent" not in names:
+        existing = {
 
-            highest = max(
+            step["agent"]: step
 
-                step["priority"]
+            for step in plan["execution_plan"]
 
-                for step in plan["execution_plan"]
+        }
 
-            )
+        normalized_plan = []
 
-            plan["execution_plan"].append(
+        priority = 1
 
-                {
+        #############################################################
+        # Always include specialists
+        #############################################################
 
-                    "agent":
+        for agent in required_agents:
 
-                        "RecommendationAgent",
+            if agent in existing:
 
-                    "priority":
+                step = existing[agent]
 
-                        highest + 1,
+            else:
 
-                    "purpose":
+                step = {
 
-                        "Generate the final recommendation."
+                    "agent": agent,
+
+                    "priority": priority,
+
+                    "purpose": f"Analyze {agent.replace('Agent','').lower()} information."
 
                 }
 
-            )
+            step["priority"] = priority
+
+            normalized_plan.append(step)
+
+            priority += 1
+
+        #############################################################
+        # Recommendation Agent always last
+        #############################################################
+
+        normalized_plan.append(
+
+            {
+
+                "agent": "RecommendationAgent",
+
+                "priority": priority,
+
+                "purpose": "Generate the final recommendation."
+
+            }
+
+        )
+
+        #############################################################
+
+        plan["execution_plan"] = normalized_plan
 
         return plan
     ####################################################################

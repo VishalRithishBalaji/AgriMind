@@ -36,7 +36,6 @@ class ContextAgent:
         ############################################################
 
         if soil["assessment"]["soil_health_score"] >= 90:
-
             opportunities.append(
                 "Excellent soil quality"
             )
@@ -65,26 +64,46 @@ class ContextAgent:
         ############################################################
 
         if market["assessment"]["trend"] == "Increasing":
-
             opportunities.append(
                 "Market prices increasing"
             )
 
         ############################################################
-        # Historical
+        # Historical (SQLite)
         ############################################################
 
-        similarity = 100 - (
-            historical["similar_cases"]["distances"][0][0] * 100
-        )
+        records = historical.get("records", [])
 
+        if records:
+
+            historical_similarity = 100.0
+
+            opportunities.append(
+                f"{len(records)} historical farm records found"
+            )
+
+        else:
+
+            historical_similarity = 0.0
+
+            risks.append(
+                "No historical records available"
+            )
+
+        ############################################################
+        # Confidence
         ############################################################
 
         confidence = (
+
             weather["confidence"]
+
             + soil["confidence"]
+
             + market["confidence"]
+
             + satellite["confidence"]
+
         ) / 4
 
         ############################################################
@@ -93,7 +112,8 @@ class ContextAgent:
 
             "crop": crop,
 
-            "location": soil["location"]["district"],
+            "location":
+                soil["location"]["district"],
 
             "weather_status":
                 weather["assessment"]["status"],
@@ -108,7 +128,10 @@ class ContextAgent:
                 market["assessment"]["trend"],
 
             "historical_similarity":
-                round(similarity, 2),
+                round(historical_similarity, 2),
+
+            "historical_records":
+                len(records),
 
             "risks":
                 risks,

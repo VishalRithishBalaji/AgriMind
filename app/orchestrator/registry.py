@@ -15,8 +15,8 @@ from app.agents.weather_agent import weather_agent
 from app.agents.soil_agent import soil_agent
 from app.agents.satellite_agent import satellite_agent
 from app.agents.market_agent import market_agent
+from app.agents.historical_agent import historical_agent
 from app.agents.recommendation_agent import recommendation_agent
-
 
 ########################################################################
 # Agent Instances
@@ -31,6 +31,8 @@ AGENT_REGISTRY = {
     "SatelliteAgent": satellite_agent,
 
     "MarketAgent": market_agent,
+
+    "HistoricalAgent": historical_agent,
 
     "RecommendationAgent": recommendation_agent
 
@@ -151,34 +153,84 @@ AGENT_METADATA = {
 
     },
 
+    "HistoricalAgent": {
+
+    "type": "specialist",
+
+    "priority": 5,
+
+    "description":
+        "Analyzes historical farm records, previous crop cycles, irrigation history, disease outbreaks, and past recommendations.",
+
+    "input":
+        "FarmContext",
+
+    "output":
+        "SpecialistOutput",
+
+    "dependencies": [],
+
+    "capabilities": [
+
+        "history",
+
+        "yield analysis",
+
+        "crop cycles",
+
+        "irrigation history",
+
+        "disease history",
+
+        "seasonal patterns",
+
+        "memory"
+
+    ]
+
+},
+
     "RecommendationAgent": {
 
-        "type": "decision",
+    "type": "decision",
 
-        "priority": 5,
+    "priority": 6,
 
-        "description":
-            "Synthesizes all SpecialistOutputs into a final agricultural recommendation.",
+    "description":
+        "Generates the final agricultural recommendation from the collaborative reasoning output.",
 
-        "input":
-            "SpecialistOutputs",
+    "input":
+        "CollaborativeReasoning",
 
-        "output":
-            "Recommendation",
+    "output":
+        "Recommendation",
 
-        "dependencies": [
-            "WeatherAgent",
-            "SoilAgent",
-            "SatelliteAgent",
-            "MarketAgent"
-        ],
+    "dependencies": [
 
-        "capabilities": [
-            "decision making",
-            "reasoning",
-            "recommendation"
-        ]
+        "WeatherAgent",
 
-    }
+        "SoilAgent",
+
+        "SatelliteAgent",
+
+        "MarketAgent",
+
+        "HistoricalAgent"
+
+    ],
+
+    "capabilities": [
+
+        "recommendation",
+
+        "decision",
+
+        "action planning",
+
+        "executive summary"
+
+    ]
+
+}
 
 }

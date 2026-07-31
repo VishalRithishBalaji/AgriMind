@@ -8,6 +8,14 @@ class Settings:
     """
     Application Configuration
     """
+        # ----------------------------
+    # SQLite
+    # ----------------------------
+
+    SQLITE_DB_PATH = os.getenv(
+        "SQLITE_DB_PATH",
+        "app/database/agrimind.db"
+    )
 
     # ----------------------------
     # PostgreSQL

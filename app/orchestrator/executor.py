@@ -1,180 +1,214 @@
-import time
+"""
+==========================================================================
+AgriMind
 
-from app.orchestrator.registry import AGENT_REGISTRY
+Dynamic Executor
+
+Module 5E Integration
+
+Author : AgriMind Team
+==========================================================================
+"""
+
+import logging
+from typing import Dict, List
+
+from app.reasoning.collaborative_engine import collaborative_engine
+
+# Import your existing agents
+from app.agents.weather_agent import weather_agent
+from app.agents.soil_agent import soil_agent
+from app.agents.satellite_agent import satellite_agent
+from app.agents.market_agent import market_agent
+from app.agents.historical_agent import historical_agent
+from app.agents.recommendation_agent import recommendation_agent
 
 
-class Executor:
+logger = logging.getLogger(__name__)
+
+
+class DynamicExecutor:
+
     """
-    Dynamic Agent Executor
+    Executes the dynamic execution plan.
 
-    Responsibilities
+    Workflow
 
-    1. Execute planner output
-    2. Execute specialist agents
-    3. Collect SpecialistOutputs
-    4. Execute RecommendationAgent
-    5. Return unified execution result
+    Planner
+        ↓
+    Specialist Agents
+        ↓
+    Collaborative Reasoning
+        ↓
+    Recommendation Agent
     """
+
+    ####################################################################
+    # Agent Registry
+    ####################################################################
 
     def __init__(self):
-        self.registry = AGENT_REGISTRY
+
+        self.agent_registry = {
+
+            "WeatherAgent": weather_agent,
+
+            "SoilAgent": soil_agent,
+
+            "SatelliteAgent": satellite_agent,
+
+            "HistoricalAgent": historical_agent,
+
+            "MarketAgent": market_agent
+
+        }
 
     ####################################################################
-    # Sort Execution Plan
+    # Execute Specialist Agents
     ####################################################################
 
-    def sort_plan(self, execution_plan):
+    def execute_specialists(
 
-        return sorted(
-            execution_plan,
-            key=lambda x: x["priority"]
-        )
-
-    ####################################################################
-    # Execute One Agent
-    ####################################################################
-
-    def execute_agent(
         self,
-        step,
+
+        execution_plan,
+
         context
+
     ):
 
-        agent_name = step["agent"]
+        outputs = []
 
-        if agent_name not in self.registry:
-            raise ValueError(
-                f"Unknown agent '{agent_name}'."
+        for step in execution_plan:
+
+            agent_name = step["agent"]
+
+            if agent_name not in self.agent_registry:
+
+                logger.warning(
+
+                    f"Unknown agent: {agent_name}"
+
+                )
+
+                continue
+
+            logger.info(
+
+                f"Running {agent_name}"
+
             )
 
-        agent = self.registry[agent_name]
+            agent = self.agent_registry[agent_name]
 
-        print()
-        print("-" * 60)
-        print(f"Executing {agent_name}")
-        print("-" * 60)
+            result = agent.analyze(context)
 
-        return agent.execute(context)
+            result["agent"] = agent_name
+
+            outputs.append(result)
+
+        return outputs
 
     ####################################################################
-    # Execute Complete Plan
+    # Main Execute
     ####################################################################
 
     def execute(
+
         self,
+
         plan,
+
         context
+
     ):
-
-        start = time.time()
-
-        ordered_plan = self.sort_plan(
-            plan["execution_plan"]
-        )
 
         specialist_outputs = {}
 
-        recommendation = None
+        ##########################################################
 
-        ############################################################
-        # Execute specialist agents
-        ############################################################
-
-        for step in ordered_plan:
+        for step in plan["execution_plan"]:
 
             agent_name = step["agent"]
 
             if agent_name == "RecommendationAgent":
+
                 continue
 
-            try:
+            if agent_name not in self.agent_registry:
 
-                output = self.execute_agent(
-                    step,
-                    context
-                )
+                continue
 
-            except Exception as e:
+            logger.info(
 
-                output = {
-                    "agent": agent_name,
-                    "status": "failed",
-                    "analysis": "",
-                    "risks": [],
-                    "opportunities": [],
-                    "confidence": 0.0,
-                    "metadata": {
-                        "error": str(e)
-                    }
-                }
+                f"Running {agent_name}"
 
-            specialist_outputs[agent_name] = output
-
-        ############################################################
-        # Execute Recommendation Agent
-        ############################################################
-
-        if "RecommendationAgent" in self.registry:
-
-            try:
-
-                recommendation = self.registry[
-                    "RecommendationAgent"
-                ].execute(
-                    specialist_outputs
-                )
-
-            except Exception as e:
-
-                recommendation = {
-                    "agent": "RecommendationAgent",
-                    "status": "failed",
-                    "recommendation": "",
-                    "priority": "Unknown",
-                    "justification": str(e),
-                    "confidence": 0.0
-                }
-
-            print("\n========== EXECUTION SUMMARY ==========")
-
-            for name, output in specialist_outputs.items():
-
-                print(f"{name:20} -> {output['status']}")
-
-            print("--------------------------------------")
-
-            print(
-                "Recommendation ->",
-                recommendation["status"]
             )
 
-            print("======================================")
+            agent = self.agent_registry[agent_name]
 
-        ############################################################
+            result = agent.execute(
 
-        elapsed = round(
-            time.time() - start,
-            3
+                context
+
+            )
+
+            result["agent"] = agent_name
+
+            specialist_outputs[agent_name] = result
+
+        ##########################################################
+        # Gemini Collaborative Reasoning
+        ##########################################################
+
+        reasoning = collaborative_engine.collaborative_reasoning(
+
+            context,
+
+            specialist_outputs
+
         )
+
+        ##########################################################
+        # Gemini Recommendation
+        ##########################################################
+
+        recommendation = recommendation_agent.execute(
+
+            reasoning
+
+        )
+
+        ##########################################################
 
         return {
 
-            "goal": plan["goal"],
+            "goal":
 
-            "execution_plan": ordered_plan,
+                plan["goal"],
 
-            "specialists": specialist_outputs,
+            "execution_plan":
 
-            "recommendation": recommendation,
+                plan["execution_plan"],
 
-            "confidence": plan["confidence"],
+            "specialists":
 
-            "execution_time": elapsed
+                specialist_outputs,
+
+            "reasoning":
+
+                reasoning,
+
+            "recommendation":
+
+                recommendation,
+
+            "confidence":
+
+                reasoning.confidence
+
         }
 
+##########################################################################
 
-########################################################################
-# Singleton
-########################################################################
-
-executor = Executor()
+executor = DynamicExecutor()
