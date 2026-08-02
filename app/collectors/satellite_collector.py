@@ -1,3 +1,15 @@
+"""
+==========================================================================
+AgriMind
+
+Satellite Collector
+
+Collects Sentinel-2 satellite information using the dynamic crop profile.
+
+Author : AgriMind Team
+==========================================================================
+"""
+
 from datetime import datetime
 
 from app.tools.satellite_tool import satellite_tool
@@ -5,19 +17,35 @@ from app.tools.satellite_tool import satellite_tool
 
 class SatelliteCollector:
 
+    """
+    Satellite Collector
+
+    Responsibilities
+    ----------------
+    1. Validate coordinates.
+    2. Execute SatelliteTool.
+    3. Normalize satellite response.
+    """
+
     ####################################################################
-    # Collect Satellite Data
+    # Collect
     ####################################################################
 
     def collect(
+
         self,
-        latitude,
-        longitude
+
+        crop_profile,
+
+        latitude=None,
+
+        longitude=None
+
     ):
 
-        ################################################################
+        ############################################################
         # Validate Coordinates
-        ################################################################
+        ############################################################
 
         if latitude is None or longitude is None:
 
@@ -43,9 +71,12 @@ class SatelliteCollector:
 
             }
 
+        ############################################################
+
         try:
 
             latitude = float(latitude)
+
             longitude = float(longitude)
 
         except (TypeError, ValueError):
@@ -72,13 +103,15 @@ class SatelliteCollector:
 
             }
 
-        ################################################################
+        ############################################################
         # Execute Satellite Tool
-        ################################################################
+        ############################################################
 
         try:
 
             result = satellite_tool.execute(
+
+                crop_profile=crop_profile,
 
                 latitude=latitude,
 
@@ -110,17 +143,21 @@ class SatelliteCollector:
 
             }
 
-        ################################################################
-        # Success Response
-        ################################################################
+                ############################################################
+        # Normalize Success Response
+        ############################################################
+
+        data = result.get("data", {})
+
+        assessment = result.get("assessment", {})
 
         return {
 
             "source": "satellite",
 
-            "status": result["status"],
+            "status": result.get("status", "failed"),
 
-            "confidence": result["confidence"],
+            "confidence": result.get("confidence", 0),
 
             "timestamp": datetime.utcnow().isoformat(),
 
@@ -136,15 +173,15 @@ class SatelliteCollector:
 
                 "acquisition_date":
 
-                    result["data"]["acquisition_date"],
+                    data.get("acquisition_date"),
 
                 "cloud_cover":
 
-                    result["data"]["cloud_cover"],
+                    data.get("cloud_cover"),
 
                 "valid_pixels":
 
-                    result["data"]["valid_pixels"]
+                    data.get("valid_pixels")
 
             },
 
@@ -152,19 +189,25 @@ class SatelliteCollector:
 
                 "ndvi":
 
-                    result["data"]["ndvi"],
+                    data.get("ndvi"),
 
                 "evi":
 
-                    result["data"]["evi"],
+                    data.get("evi"),
 
                 "savi":
 
-                    result["data"]["savi"],
+                    data.get("savi"),
 
                 "health":
 
-                    result["assessment"]["crop_health"]
+                    assessment.get(
+
+                        "crop_health",
+
+                        "Unknown"
+
+                    )
 
             },
 
@@ -172,11 +215,17 @@ class SatelliteCollector:
 
                 "ndwi":
 
-                    result["data"]["ndwi"],
+                    data.get("ndwi"),
 
                 "stress":
 
-                    result["assessment"]["water_stress"]
+                    assessment.get(
+
+                        "water_stress",
+
+                        "Unknown"
+
+                    )
 
             },
 
@@ -184,7 +233,13 @@ class SatelliteCollector:
 
                 "exposure":
 
-                    result["assessment"]["soil_exposure"]
+                    assessment.get(
+
+                        "soil_exposure",
+
+                        "Unknown"
+
+                    )
 
             },
 
@@ -192,19 +247,29 @@ class SatelliteCollector:
 
                 "vegetation_score":
 
-                    result["assessment"]["vegetation_score"],
+                    assessment.get(
+
+                        "vegetation_score",
+
+                        0
+
+                    ),
 
                 "recommendation":
 
-                    result["assessment"]["recommendation"]
+                    assessment.get(
+
+                        "recommendation",
+
+                        "Unavailable"
+
+                    )
 
             }
 
         }
 
 
-########################################################################
-# Singleton
-########################################################################
+##########################################################################
 
 satellite_collector = SatelliteCollector()

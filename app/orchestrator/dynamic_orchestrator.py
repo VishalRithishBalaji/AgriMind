@@ -1,5 +1,44 @@
+"""
+==========================================================================
+AgriMind
+
+Dynamic Multi-Agent Orchestrator
+
+Pipeline
+
+User Query
+      │
+      ▼
+Crop Knowledge Agent
+      │
+      ▼
+Data Collection
+      │
+      ▼
+Context Understanding
+      │
+      ▼
+Planner
+      │
+      ▼
+Specialist Agents
+      │
+      ▼
+Collaborative Reasoning
+      │
+      ▼
+Executive Decision Intelligence
+      │
+      ▼
+Recommendation Agent
+
+Author : AgriMind Team
+==========================================================================
+"""
+
 import time
 
+from app.agents.crop_knowledge_agent import crop_knowledge_agent
 from app.collectors.data_collector import data_collector
 from app.agents.context_agent import context_agent
 from app.orchestrator.planner import planner
@@ -7,106 +46,201 @@ from app.orchestrator.executor import executor
 
 
 class DynamicOrchestrator:
-    """
-    Complete AgriMind Multi-Agent Orchestrator
 
-    Pipeline
-    --------
-    User Query
-        ↓
-    Data Collection
-        ↓
-    Context Understanding
-        ↓
-    Planning
-        ↓
-    Specialist Execution
-        ↓
-    Recommendation
     """
+    Complete AgriMind Dynamic Orchestrator.
+    """
+
+    ####################################################################
+    # Main Pipeline
+    ####################################################################
 
     def run(
+
         self,
+
         user_query,
+
         crop="rice",
+
         latitude=11.0168,
+
         longitude=76.9558
+
     ):
 
         overall_start = time.time()
 
-        ############################################################
-        # Step 1 : Collect Data
-        ############################################################
+        ################################################################
+        # STEP 1
+        # Crop Knowledge
+        ################################################################
+
+        print("\nLoading Crop Knowledge...\n")
+
+        crop_result = crop_knowledge_agent.execute(
+
+            crop
+
+        )
+
+        crop_profile = crop_result["crop_profile"]
+
+        ################################################################
+        # STEP 2
+        # Collect Farm Data
+        ################################################################
 
         print("\nCollecting Farm Data...\n")
 
         collected_data = data_collector.collect(
-            crop=crop,
+
+            crop_profile=crop_profile,
+
             latitude=latitude,
+
             longitude=longitude
+
         )
 
-        ############################################################
-        # Step 2 : Build Context
-        ############################################################
+        ################################################################
+        # STEP 3
+        # Context Understanding
+        ################################################################
 
         print("\nBuilding Farm Context...\n")
 
         context = context_agent.analyze(
+
             collected_data
+
         )
 
-        ############################################################
-        # Step 3 : Plan
-        ############################################################
+        ################################################################
+        # STEP 4
+        # Dynamic Planning
+        ################################################################
 
         print("\nPlanning...\n")
 
         plan = planner.plan(
+
             user_query,
+
             context
+
         )
 
-        ############################################################
-        # Step 4 : Execute
-        ############################################################
+        ################################################################
+        # STEP 5
+        # Multi-Agent Execution
+        ################################################################
 
         print("\nExecuting Specialists...\n")
 
         execution = executor.execute(
+
             plan,
+
             context
+
         )
 
-        ############################################################
+        ################################################################
+        # Final Result
+        ################################################################
 
         total_time = round(
+
             time.time() - overall_start,
+
             3
+
         )
+
+        ################################################################
 
         return {
 
-            "query": user_query,
+            ############################################################
+            # Query
+            ############################################################
 
-            "raw_data": collected_data,
+            "query":
 
-            "context": context,
+                user_query,
 
-            "plan": plan,
+            ############################################################
+            # Crop Knowledge
+            ############################################################
 
-            "execution": execution,
+            "crop_profile":
 
-            "status": "success",
+                crop_profile,
 
-            "total_time": total_time
+            ############################################################
+            # Raw Data
+            ############################################################
+
+            "raw_data":
+
+                collected_data,
+
+            ############################################################
+            # Context
+            ############################################################
+
+            "context":
+
+                context,
+
+            ############################################################
+            # Planner
+            ############################################################
+
+            "plan":
+
+                plan,
+
+            ############################################################
+            # Module 5F Output
+            ############################################################
+
+            "reasoning":
+
+                execution["reasoning"],
+
+            "executive":
+
+                execution["executive"],
+
+            "recommendation":
+
+                execution["recommendation"],
+
+            ############################################################
+            # Full Execution
+            ############################################################
+
+            "execution":
+
+                execution,
+
+            ############################################################
+
+            "status":
+
+                "success",
+
+            "total_time":
+
+                total_time
 
         }
 
 
-########################################################################
+##########################################################################
 # Singleton
-########################################################################
+##########################################################################
 
 dynamic_orchestrator = DynamicOrchestrator()

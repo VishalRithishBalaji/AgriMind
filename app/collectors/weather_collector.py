@@ -1,26 +1,61 @@
+"""
+==========================================================================
+AgriMind
+
+Weather Collector
+
+Collects weather information using the dynamic crop profile.
+
+Author : AgriMind Team
+==========================================================================
+"""
+
 from app.tools.weather_tool import weather_tool
 
 
 class WeatherCollector:
 
+    """
+    Weather Collector
+
+    Responsibilities
+    ----------------
+    1. Call WeatherTool.
+    2. Normalize the response.
+    3. Return standardized weather data.
+    """
+
+    ####################################################################
+    # Collect
+    ####################################################################
+
     def collect(
+
         self,
-        crop,
+
+        crop_profile,
+
         latitude=None,
+
         longitude=None
+
     ):
 
         result = weather_tool.execute(
-            crop=crop,
+
+            crop_profile=crop_profile,
+
             latitude=latitude,
+
             longitude=longitude
+
         )
 
         return {
 
             "source": "weather",
 
-            "status": result.get("status"),
+            "status": result["status"],
 
             "timestamp": result["data"].get("time"),
 
@@ -28,9 +63,11 @@ class WeatherCollector:
 
             "assessment": result["assessment"],
 
-            "confidence": result.get("confidence")
+            "confidence": result["confidence"]
 
         }
 
+
+##########################################################################
 
 weather_collector = WeatherCollector()

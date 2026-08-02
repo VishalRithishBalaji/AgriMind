@@ -1,81 +1,139 @@
+"""
+==========================================================================
+AgriMind
+
+Historical Specialist Agent
+
+Uses dynamic crop profiles and historical memory.
+
+Author : AgriMind Team
+==========================================================================
+"""
+
 import json
 
-from app.utils.llm_client import llm_client
-
+from app.agents.base_agent import BaseAgent
 from app.prompts.historical_prompt import HISTORICAL_PROMPT
 
-from app.collectors.historical_collector import historical_collector
 
+class HistoricalAgent(BaseAgent):
 
-class HistoricalAgent:
+    """
+    Historical Specialist Agent
+
+    Responsibilities
+    ----------------
+    1. Analyze historical farm records.
+    2. Compare current conditions with previous seasons.
+    3. Identify recurring patterns.
+    4. Learn from past successes and failures.
+    5. Generate evidence-based recommendations.
+    """
 
     name = "HistoricalAgent"
 
-    ########################################################
+    prompt = HISTORICAL_PROMPT
 
-    def execute(
+    ####################################################################
+    # Build Prompt
+    ####################################################################
 
-        self,
+    def build_prompt(self, context):
 
-        context
+        crop_profile = context["crop_profile"]
 
-    ):
+        ############################################################
+        # Historical records already collected
+        ############################################################
 
-        crop = context["crop"]
+        historical = context["historical"]
 
-        history = historical_collector.collect(
-
-            crop
-
-        )
+        ############################################################
 
         prompt = f"""
-
 {HISTORICAL_PROMPT}
 
-=====================================
+============================================================
 
-Current Context
+CROP PROFILE
+
+{json.dumps(crop_profile, indent=4)}
+
+============================================================
+
+CURRENT FARM CONTEXT
 
 {json.dumps(context, indent=4)}
 
-=====================================
+============================================================
 
-Historical Records
+HISTORICAL DATA
 
-{json.dumps(history, indent=4)}
+{json.dumps(historical, indent=4)}
 
-=====================================
+============================================================
 
-Return ONLY JSON.
+TASK
+
+Compare the CURRENT FARM CONDITIONS against the
+HISTORICAL RECORDS.
+
+Determine
+
+1. Similar historical seasons.
+2. Successful farming practices.
+3. Failed farming practices.
+4. Recurring farming patterns.
+5. Historical risks.
+6. Historical opportunities.
+7. Recommendation based on historical evidence.
+
+If there are no historical records,
+explicitly mention it.
+
+Return ONLY valid JSON.
+
+Schema
+
+{{
+    "analysis": "",
+    "patterns": [],
+    "previous_successes": [],
+    "previous_failures": [],
+    "recommendation": "",
+    "confidence": 0.95
+}}
 
 """
 
-        raw = llm_client.generate(
+        return prompt
 
-            prompt
+    ####################################################################
+    # Parse Response
+    ####################################################################
 
-        )
+    def parse_response(self, response):
 
-        raw = raw.replace("```json","")
+        response = response.replace("```json", "")
+        response = response.replace("```", "")
+        response = response.strip()
 
-        raw = raw.replace("```","")
+        start = response.find("{")
+        end = response.rfind("}")
 
-        raw = raw.strip()
+        if start == -1 or end == -1:
+            raise ValueError("No JSON found in HistoricalAgent response.")
 
-        start = raw.find("{")
+        response = response[start:end + 1]
 
-        end = raw.rfind("}")
-
-        raw = raw[start:end+1]
-
-        result = json.loads(raw)
+        result = json.loads(response)
 
         result["agent"] = self.name
-
         result["status"] = "completed"
 
         return result
 
+
+##########################################################################
 
 historical_agent = HistoricalAgent()

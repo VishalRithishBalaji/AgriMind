@@ -1,0 +1,152 @@
+{
+    "crop": "orange",
+    "scientific_name": "Citrus sinensis",
+    "family": "Rutaceae",
+    "type": "Perennial",
+    "category": "Fruit",
+    "growth_duration_days": 210,
+    "growth_stages": [
+        "Germination",
+        "Vegetative",
+        "Flowering",
+        "Fruiting",
+        "Harvest"
+    ],
+    "optimal_conditions": {
+        "temperature": {
+            "minimum": 15,
+            "maximum": 30,
+            "unit": "C"
+        },
+        "humidity": {
+            "minimum": 40,
+            "maximum": 70,
+            "unit": "%"
+        },
+        "rainfall": {
+            "minimum": 900,
+            "maximum": 1200,
+            "unit": "mm/year"
+        },
+        "soil_ph": {
+            "minimum": 6.0,
+            "maximum": 7.0
+        },
+        "wind_speed": {
+            "maximum": 25,
+            "unit": "km/h"
+        },
+        "sunlight_hours": {
+            "minimum": 6,
+            "maximum": 8
+        }
+    },
+    "soil": {
+        "preferred_texture": [
+            "Loam",
+            "Sandy Loam"
+        ],
+        "preferred_nitrogen": "Medium",
+        "preferred_organic_carbon": "Medium",
+        "preferred_drainage": "Good"
+    },
+    "water": {
+        "irrigation_type": "Drip irrigation",
+        "water_requirement": "Medium",
+        "critical_growth_stage": "Fruiting",
+        "recommended_frequency": "Every 10-14 days"
+    },
+    "satellite_thresholds": {
+        "ndvi": {
+            "excellent": 0.75,
+            "healthy": 0.6,
+            "moderate": 0.45,
+            "poor": 0.3
+        },
+        "ndwi": {
+            "low_stress": 0.25,
+            "moderate_stress": 0.15,
+            "high_stress": 0.05
+        },
+        "savi": {
+            "low_exposure": 0.5,
+            "moderate_exposure": 0.35,
+            "high_exposure": 0.2
+        }
+    },
+    "market": {
+        "keywords": [
+            "juice",
+            "fresh fruit"
+        ],
+        "major_states": [
+            "Florida",
+            "California"
+        ],
+        "major_countries": [
+            "Brazil",
+            "China"
+        ],
+        "harvest_season": "Winter",
+        "storage_capability": "Good",
+        "perishability": "Medium"
+    },
+    "nutrition": {
+        "primary_nutrients": [
+            "Vitamin C",
+            "Potassium"
+        ],
+        "commercial_products": [
+            "Juice",
+            "Marmalade"
+        ]
+    },
+    "common_diseases": [
+        {
+            "name": "Citrus canker",
+            "symptoms": "Lesions on leaves and fruit",
+            "treatment": "Copper-based fungicides"
+        },
+        {
+            "name": "Root rot",
+            "symptoms": "Yellowing leaves and soft roots",
+            "treatment": "Improved drainage and fungicides"
+        }
+    ],
+    "common_pests": [
+        {
+            "name": "Aphids",
+            "treatment": "Insecticidal soap"
+        },
+        {
+            "name": "Whiteflies",
+            "treatment": "Yellow sticky traps"
+        }
+    ],
+    "fertilizer": {
+        "recommended": "Balanced fertilizer",
+        "npk_ratio": "10-10-10",
+        "organic_options": [
+            "Compost",
+            "Manure"
+        ]
+    },
+    "yield": {
+        "average_tonnes_per_hectare": 20,
+        "excellent_tonnes_per_hectare": 30
+    },
+    "recommendations": {
+        "irrigation": "Regular watering during fruiting stage",
+        "fertilizer": "Apply balanced fertilizer during vegetative stage",
+        "harvesting": "Hand-picking or mechanical harvesting",
+        "storage": "Cool and dry storage"
+    },
+    "summary": "Orange is a perennial fruit crop that requires well-drained soil and a warm climate. It is susceptible to citrus canker and root rot, and regular fertilization and irrigation are necessary for optimal growth.",
+    "references": [
+        "FAO",
+        "ICAR",
+        "USDA"
+    ],
+    "generated_by": "Groq",
+    "version": 2
+}

@@ -1,0 +1,153 @@
+{
+    "crop": "apple",
+    "scientific_name": "Malus domestica",
+    "family": "Rosaceae",
+    "type": "Perennial",
+    "category": "Fruit",
+    "growth_duration_days": 180,
+    "growth_stages": [
+        "Germination",
+        "Vegetative",
+        "Flowering",
+        "Fruiting",
+        "Harvest"
+    ],
+    "optimal_conditions": {
+        "temperature": {
+            "minimum": 15,
+            "maximum": 25,
+            "unit": "C"
+        },
+        "humidity": {
+            "minimum": 60,
+            "maximum": 80,
+            "unit": "%"
+        },
+        "rainfall": {
+            "minimum": 600,
+            "maximum": 1000,
+            "unit": "mm/year"
+        },
+        "soil_ph": {
+            "minimum": 6.0,
+            "maximum": 6.5
+        },
+        "wind_speed": {
+            "maximum": 15,
+            "unit": "km/h"
+        },
+        "sunlight_hours": {
+            "minimum": 6,
+            "maximum": 8
+        }
+    },
+    "soil": {
+        "preferred_texture": [
+            "Loam"
+        ],
+        "preferred_nitrogen": "Medium",
+        "preferred_organic_carbon": "Medium",
+        "preferred_drainage": "Good"
+    },
+    "water": {
+        "irrigation_type": "Drip irrigation",
+        "water_requirement": "Medium",
+        "critical_growth_stage": "Fruiting",
+        "recommended_frequency": "Weekly"
+    },
+    "satellite_thresholds": {
+        "ndvi": {
+            "excellent": 0.75,
+            "healthy": 0.6,
+            "moderate": 0.4,
+            "poor": 0.2
+        },
+        "ndwi": {
+            "low_stress": 0.25,
+            "moderate_stress": 0.1,
+            "high_stress": 0.0
+        },
+        "savi": {
+            "low_exposure": 0.5,
+            "moderate_exposure": 0.3,
+            "high_exposure": 0.1
+        }
+    },
+    "market": {
+        "keywords": [
+            "fresh fruit",
+            "juice",
+            "cider"
+        ],
+        "major_states": [
+            "Washington",
+            "New York"
+        ],
+        "major_countries": [
+            "United States",
+            "China"
+        ],
+        "harvest_season": "September to November",
+        "storage_capability": "Good",
+        "perishability": "Medium"
+    },
+    "nutrition": {
+        "primary_nutrients": [
+            "Carbohydrates",
+            "Fiber",
+            "Vitamin C"
+        ],
+        "commercial_products": [
+            "Apple juice",
+            "Apple sauce",
+            "Dried apples"
+        ]
+    },
+    "common_diseases": [
+        {
+            "name": "Powdery mildew",
+            "symptoms": "White powdery patches on leaves",
+            "treatment": "Fungicides"
+        },
+        {
+            "name": "Fire blight",
+            "symptoms": "Blackened leaves and stems",
+            "treatment": "Antibiotics"
+        }
+    ],
+    "common_pests": [
+        {
+            "name": "Aphids",
+            "treatment": "Insecticides"
+        },
+        {
+            "name": "Codling moths",
+            "treatment": "Insecticides"
+        }
+    ],
+    "fertilizer": {
+        "recommended": "Balanced fertilizer",
+        "npk_ratio": "10-10-10",
+        "organic_options": [
+            "Compost",
+            "Manure"
+        ]
+    },
+    "yield": {
+        "average_tonnes_per_hectare": 20,
+        "excellent_tonnes_per_hectare": 30
+    },
+    "recommendations": {
+        "irrigation": "Regular watering",
+        "fertilizer": "Fertilize during growing season",
+        "harvesting": "Hand-picking",
+        "storage": "Cool and dry storage"
+    },
+    "summary": "Apple is a perennial fruit crop that requires well-drained soil, moderate temperatures, and adequate moisture. It is susceptible to diseases like powdery mildew and fire blight, and pests like aphids and codling moths. Regular irrigation, fertilization, and pruning are essential for optimal growth and yield.",
+    "references": [
+        "FAO",
+        "USDA"
+    ],
+    "generated_by": "Groq",
+    "version": 2
+}

@@ -1,0 +1,155 @@
+{
+    "crop": "cotton",
+    "scientific_name": "Gossypium hirsutum",
+    "family": "Malvaceae",
+    "type": "Annual",
+    "category": "Fiber",
+    "growth_duration_days": 150,
+    "growth_stages": [
+        "Germination",
+        "Vegetative",
+        "Flowering",
+        "Fruiting",
+        "Harvest"
+    ],
+    "optimal_conditions": {
+        "temperature": {
+            "minimum": 15,
+            "maximum": 30,
+            "unit": "C"
+        },
+        "humidity": {
+            "minimum": 40,
+            "maximum": 80,
+            "unit": "%"
+        },
+        "rainfall": {
+            "minimum": 600,
+            "maximum": 1200,
+            "unit": "mm/year"
+        },
+        "soil_ph": {
+            "minimum": 5.5,
+            "maximum": 7.0
+        },
+        "wind_speed": {
+            "maximum": 25,
+            "unit": "km/h"
+        },
+        "sunlight_hours": {
+            "minimum": 8,
+            "maximum": 12
+        }
+    },
+    "soil": {
+        "preferred_texture": [
+            "Clay",
+            "Loam"
+        ],
+        "preferred_nitrogen": "Medium",
+        "preferred_organic_carbon": "Medium",
+        "preferred_drainage": "Good"
+    },
+    "water": {
+        "irrigation_type": "Flood irrigation",
+        "water_requirement": "High",
+        "critical_growth_stage": "Flowering",
+        "recommended_frequency": "Every 7-10 days"
+    },
+    "satellite_thresholds": {
+        "ndvi": {
+            "excellent": 0.75,
+            "healthy": 0.6,
+            "moderate": 0.4,
+            "poor": 0.2
+        },
+        "ndwi": {
+            "low_stress": 0.25,
+            "moderate_stress": 0.1,
+            "high_stress": 0.0
+        },
+        "savi": {
+            "low_exposure": 0.5,
+            "moderate_exposure": 0.3,
+            "high_exposure": 0.1
+        }
+    },
+    "market": {
+        "keywords": [
+            "textile",
+            "fiber"
+        ],
+        "major_states": [
+            "Texas",
+            "Louisiana",
+            "Mississippi"
+        ],
+        "major_countries": [
+            "China",
+            "India",
+            "United States"
+        ],
+        "harvest_season": "September to November",
+        "storage_capability": "Good",
+        "perishability": "Low"
+    },
+    "nutrition": {
+        "primary_nutrients": [
+            "Nitrogen",
+            "Phosphorus",
+            "Potassium"
+        ],
+        "commercial_products": [
+            "Cottonseed oil",
+            "Cotton linters"
+        ]
+    },
+    "common_diseases": [
+        {
+            "name": "Fusarium wilt",
+            "symptoms": "Yellowing of leaves, wilting of plants",
+            "treatment": "Fungicides, crop rotation"
+        },
+        {
+            "name": "Verticillium wilt",
+            "symptoms": "Yellowing of leaves, premature defoliation",
+            "treatment": "Fungicides, crop rotation"
+        }
+    ],
+    "common_pests": [
+        {
+            "name": "Aphids",
+            "treatment": "Insecticides, biological control"
+        },
+        {
+            "name": "Bollworms",
+            "treatment": "Insecticides, Bt cotton"
+        }
+    ],
+    "fertilizer": {
+        "recommended": "NPK 10-20-10",
+        "npk_ratio": "1:2:1",
+        "organic_options": [
+            "Compost",
+            "Manure"
+        ]
+    },
+    "yield": {
+        "average_tonnes_per_hectare": 2.5,
+        "excellent_tonnes_per_hectare": 4.0
+    },
+    "recommendations": {
+        "irrigation": "Flood irrigation during flowering stage",
+        "fertilizer": "Apply NPK 10-20-10 at planting and sidedressing",
+        "harvesting": "Hand picking or mechanical harvesting",
+        "storage": "Store in dry, well-ventilated areas"
+    },
+    "summary": "Cotton is a warm-season crop that requires adequate moisture, sunlight, and fertilization. It is susceptible to diseases like Fusarium wilt and pests like aphids and bollworms. Proper irrigation, fertilization, and pest management practices can improve yield and quality.",
+    "references": [
+        "FAO",
+        "ICAR",
+        "USDA"
+    ],
+    "generated_by": "Groq",
+    "version": 2
+}

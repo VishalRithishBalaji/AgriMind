@@ -1,3 +1,15 @@
+"""
+==========================================================================
+AgriMind
+
+Multi-Source Data Collector
+
+Collects all external data sources using the dynamic crop profile.
+
+Author : AgriMind Team
+==========================================================================
+"""
+
 from datetime import datetime
 
 from app.config import ai_settings
@@ -11,15 +23,11 @@ from app.collectors.historical_collector import historical_collector
 
 class DataCollector:
 
-    ####################################################################
-    # Collect All Sources
-    ####################################################################
-
     def collect(
 
         self,
 
-        crop="rice",
+        crop_profile,
 
         latitude=None,
 
@@ -27,22 +35,16 @@ class DataCollector:
 
     ):
 
-        ################################################################
-        # Default Coordinates
-        ################################################################
+        crop = crop_profile["crop"]
 
         if latitude is None:
-
             latitude = ai_settings.DEFAULT_LATITUDE
 
         if longitude is None:
-
             longitude = ai_settings.DEFAULT_LONGITUDE
 
         latitude = float(latitude)
         longitude = float(longitude)
-
-        ################################################################
 
         print("=" * 70)
         print("MULTI-SOURCE DATA COLLECTION STARTED")
@@ -51,16 +53,15 @@ class DataCollector:
         print(f"Crop      : {crop}")
         print(f"Latitude  : {latitude}")
         print(f"Longitude : {longitude}")
-
         print()
 
-        ################################################################
+        ############################################################
         # Weather
-        ################################################################
+        ############################################################
 
         weather = weather_collector.collect(
 
-            crop=crop,
+            crop_profile=crop_profile,
 
             latitude=latitude,
 
@@ -70,11 +71,13 @@ class DataCollector:
 
         print("✓ Weather collected")
 
-        ################################################################
+        ############################################################
         # Soil
-        ################################################################
+        ############################################################
 
         soil = soil_collector.collect(
+
+            crop_profile=crop_profile,
 
             latitude=latitude,
 
@@ -86,13 +89,13 @@ class DataCollector:
 
         district = soil["location"]["district"]
 
-        ################################################################
+        ############################################################
         # Market
-        ################################################################
+        ############################################################
 
         market = market_collector.collect(
 
-            crop=crop,
+            crop_profile=crop_profile,
 
             district=district
 
@@ -100,13 +103,15 @@ class DataCollector:
 
         print("✓ Market collected")
 
-        ################################################################
+        ############################################################
         # Satellite
-        ################################################################
+        ############################################################
 
         print("Collecting Sentinel-2 imagery...")
 
         satellite = satellite_collector.collect(
+
+            crop_profile=crop_profile,
 
             latitude=latitude,
 
@@ -118,85 +123,98 @@ class DataCollector:
 
             print(
 
-                "✓ Satellite collected "
-
+                f"✓ Satellite collected "
                 f"(NDVI={satellite['vegetation']['ndvi']:.3f}, "
-
                 f"Cloud={satellite['imagery']['cloud_cover']}%)"
 
             )
 
+            satellite_summary = f"""
+NDVI : {satellite['vegetation']['ndvi']}
+EVI : {satellite['vegetation']['evi']}
+SAVI : {satellite['vegetation']['savi']}
+Vegetation Health : {satellite['vegetation']['health']}
+NDWI : {satellite['water']['ndwi']}
+Water Stress : {satellite['water']['stress']}
+Soil Exposure : {satellite['soil']['exposure']}
+"""
+
         else:
 
-            print(
+            print(f"⚠ Satellite skipped")
 
-                f"⚠ Satellite skipped: "
+            print(f"Reason : {satellite.get('error')}")
 
-                f"{satellite['error']}"
+            satellite_summary = f"""
+Satellite data unavailable.
 
-            )
-        
-        ################################################################
-        # Historical Memory
-        ################################################################
+Reason:
+{satellite.get('error')}
+"""
+
+        ############################################################
+        # Weather Summary
+        ############################################################
+
+        weather_summary = f"""
+Temperature : {weather['raw_data']['temperature']}
+Humidity : {weather['raw_data']['humidity']}
+Rainfall : {weather['raw_data']['rainfall']}
+"""
+
+        ############################################################
+        # Soil Summary
+        ############################################################
+
+        soil_summary = f"""
+pH : {soil['raw_data']['ph']}
+Nitrogen : {soil['raw_data']['nitrogen']}
+Organic Carbon : {soil['raw_data']['organic_carbon']}
+"""
+
+        ############################################################
+        # Market Summary
+        ############################################################
+
+        market_summary = f"""
+Trend : {market['raw_data'].get('Trend')}
+Price : {market['raw_data'].get('Price')}
+"""
+
+        ############################################################
+        # Historical
+        ############################################################
 
         historical = historical_collector.collect(
 
-            crop=crop,
+            crop_profile=crop_profile,
 
-            weather=f"""
+            weather=weather_summary,
 
-Temperature : {weather['raw_data']['temperature']}
+            soil=soil_summary,
 
-Humidity : {weather['raw_data']['humidity']}
+            satellite=satellite_summary,
 
-Rainfall : {weather['raw_data']['rainfall']}
-
-""",
-
-            soil=f"""
-
-pH : {soil['raw_data']['ph']}
-
-Nitrogen : {soil['raw_data']['nitrogen']}
-
-Organic Carbon : {soil['raw_data']['organic_carbon']}
-
-""",
-
-            market=f"""
-
-Trend : {market['raw_data']['Trend']}
-
-Price : {market['raw_data']['Price']}
-
-"""
+            market=market_summary
 
         )
 
         print("✓ Historical data collected")
 
-        ################################################################
-
         print()
-
         print("=" * 70)
         print("ALL SOURCES COLLECTED")
         print("=" * 70)
-
-        ################################################################
 
         return {
 
             "metadata": {
 
-                "collection_time":
+                "collection_time": datetime.utcnow().isoformat(),
 
-                    datetime.utcnow().isoformat(),
+                "crop": crop,
 
-                "crop":
-
-                    crop,
+                "crop_profile": crop_profile,
 
                 "location": {
 
@@ -208,29 +226,19 @@ Price : {market['raw_data']['Price']}
 
             },
 
-            "weather":
+            "weather": weather,
 
-                weather,
+            "soil": soil,
 
-            "soil":
+            "market": market,
 
-                soil,
+            "satellite": satellite,
 
-            "market":
-
-                market,
-
-            "satellite":
-
-                satellite,
-
-            "historical":
-
-                historical
+            "historical": historical
 
         }
 
 
-########################################################################
+##########################################################################
 
 data_collector = DataCollector()
